@@ -1,11 +1,10 @@
 
-import javax.crypto.Cipher;
-import javax.crypto.spec.SecretKeySpec;
 import java.security.MessageDigest;
 import java.util.Base64;
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
 
 public class CryptoUtils {
-
     // Generate AES key from master password
     private static SecretKeySpec getKey(String password) throws Exception {
         MessageDigest sha = MessageDigest.getInstance("SHA-256");
@@ -13,7 +12,7 @@ public class CryptoUtils {
         return new SecretKeySpec(key, "AES");
     }
 
-    // Encrypt text
+    // Encrypting text
     public static String encrypt(String data, String password) {
         try {
             SecretKeySpec key = getKey(password);
@@ -28,7 +27,7 @@ public class CryptoUtils {
         }
     }
 
-    // Decrypt text
+    // Decrypting text
     public static String decrypt(String data, String password) {
         try {
             SecretKeySpec key = getKey(password);

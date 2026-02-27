@@ -1,10 +1,9 @@
 
 import java.io.*;
 import java.security.MessageDigest;
+import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.Scanner;
-import java.security.SecureRandom;
-import java.io.Console;
 
 public class MasterPassword {
 
@@ -100,7 +99,7 @@ public class MasterPassword {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Authentication error. Error: " + e.getMessage());
         }
         return false;
     }

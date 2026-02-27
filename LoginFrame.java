@@ -1,7 +1,6 @@
-
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import javax.swing.*;
 
 public class LoginFrame extends JFrame {
 
@@ -36,7 +35,7 @@ public class LoginFrame extends JFrame {
     private void handleLogin(ActionEvent e) {
         String input = new String(passwordField.getPassword());
 
-        // Use your existing authentication logic
+        // Using existing authentication method from MasterPassword class
         boolean ok = MasterPassword.verifyGUI(input);
 
         if (ok) {
