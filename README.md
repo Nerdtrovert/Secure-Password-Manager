@@ -59,31 +59,45 @@ java PasswordManager
 📈 Product Roadmap (Future Enhancements)
 Near-Term Improvements:
 Password strength indicator
+
 Search and filtering within vault
+
 Clipboard copy feature
+
 
 Mid-Term Opportunities:
 Dark/light theme options
+
 Database storage for scalability
+
 Backup and restore workflow
 
 Long-Term Vision:
 Multi-user support
+
 Secure sync across devices
+
 Cross-platform installer packaging
+
 
 🎯 What This Project Demonstrates
 From an engineering perspective:
 secure storage practices
+
 encryption workflows
+
 modular architecture
 
 From a product perspective:
 user-centric onboarding design
+
 feature prioritization thinking
+
 iterative UX improvements
+
 roadmap planning mindset
 
 📜 License
 Educational and portfolio use.
 If you are still reading, thank you🙂
+
