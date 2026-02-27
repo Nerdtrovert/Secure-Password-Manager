@@ -41,3 +41,7 @@ Cross-platform packaging
 
 License-
 This project is for educational and portfolio purposes.
+
+Screenshots-
+![Login Screenshot](screenshots/login.png)
+![Vault Manager Screenshot](screenshots/vaultmanager.png)
