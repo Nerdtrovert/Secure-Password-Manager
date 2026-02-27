@@ -34,26 +34,29 @@ public class Vault {
     }
 
     // Delete credential
-    public void deleteCredential(String username) {
+public void deleteCredential(String username) {
 
         File input = new File(FILE);
         File temp = new File("temp.txt");
-
         boolean found = false;
-
-        try (BufferedReader br = new BufferedReader(new FileReader(input)); 
-        FileWriter fw = new FileWriter(temp)) {
+        try (
+                BufferedReader br = new BufferedReader(new FileReader(input)); FileWriter fw = new FileWriter(temp)) {
             String line;
- 
+
             while ((line = br.readLine()) != null) {
-                if (line.startsWith(username + " :")) {
+
+                // decrypt first
+                String decrypted = CryptoUtils.decrypt(line, masterPassword);
+
+                if (decrypted.startsWith(username + " :")) {
                     found = true;
-                    continue;
+                    continue; // skip writing this line
                 }
-                fw.write(line + "\n");
+
+                fw.write(line + "\n"); // keep encrypted line
             }
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             System.out.println("Error processing vault.");
             return;
         }
@@ -62,8 +65,8 @@ public class Vault {
         temp.renameTo(input);
 
         if (found) {
-            System.out.println("Credential deleted."); 
-        }else {
+            System.out.println("Credential deleted.");
+        } else {
             System.out.println("Username not found.");
         }
     }
@@ -102,5 +105,16 @@ public class Vault {
         }
 
         return rows.toArray(new String[0][]);
+    }
+    public void resetVault() {
+        File vaultFile = new File("vault.txt");
+        if (vaultFile.exists()) {
+            vaultFile.delete();
+        }
+
+        File masterFile = new File("master.hash");
+        if (masterFile.exists()) {
+            masterFile.delete();
+        }
     }
 }

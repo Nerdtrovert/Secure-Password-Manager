@@ -1,38 +1,64 @@
-import javax.swing.*;
+
 import java.awt.*;
+import javax.swing.*;
 
 public class MainFrame extends JFrame {
 
     private Vault vault;
     private JTextField siteField;
     private JPasswordField passField;
+    private JTable table;
+    private JLabel userLabel;
 
     public MainFrame(String masterPassword) {
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception ignored) {
+        }
 
         vault = new Vault(masterPassword);
 
         setTitle("Password Manager");
-        setSize(420, 260);
+        setSize(460, 300);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        // Main panel with padding
         JPanel main = new JPanel();
         main.setLayout(new BoxLayout(main, BoxLayout.Y_AXIS));
-        main.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+        main.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        JLabel title = new JLabel("Vault Manager", JLabel.CENTER);
-        title.setFont(new Font("Arial", Font.BOLD, 18));
+        // ===== HEADER (Title center, User right) =====
+        // ===== HEADER PANEL =====
+        JPanel header = new JPanel();
+        header.setLayout(new BoxLayout(header, BoxLayout.Y_AXIS));
+
+// top row → username aligned right
+        JPanel userRow = new JPanel(new BorderLayout());
+        userRow.setOpaque(false);
+
+        userLabel = new JLabel("User: " + MasterPassword.getUsername());
+        userLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        userLabel.setForeground(Color.GRAY);
+
+        userRow.add(userLabel, BorderLayout.EAST);
+
+// second row → perfectly centered title
+        JLabel title = new JLabel("Password Manager", JLabel.CENTER);
+        title.setFont(new Font("Segoe UI", Font.BOLD, 22));
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        main.add(title);
-        main.add(Box.createRigidArea(new Dimension(0, 15)));
+        header.add(userRow);
+        header.add(title);
 
-        // Form panel
-        JPanel form = new JPanel(new GridLayout(2, 2, 8, 8));
+        header.setBorder(BorderFactory.createEmptyBorder(5, 5, 10, 5));
+        main.add(header);
 
-        siteField = new JTextField(15);
-        passField = new JPasswordField(15);
+        // ===== FORM =====
+        JPanel form = new JPanel(new GridLayout(2, 2, 10, 10));
+        form.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+
+        siteField = new JTextField();
+        passField = new JPasswordField();
 
         form.add(new JLabel("Website/App:"));
         form.add(siteField);
@@ -40,46 +66,31 @@ public class MainFrame extends JFrame {
         form.add(passField);
 
         main.add(form);
-        main.add(Box.createRigidArea(new Dimension(0, 15)));
 
-        // Button panel
-        JPanel buttons = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
+        // ===== BUTTONS =====
+        JPanel buttons = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
 
         JButton addBtn = new JButton("Add");
-        addBtn.setPreferredSize(new Dimension(90, 30));
         addBtn.addActionListener(e -> addCredential());
 
         JButton listBtn = new JButton("Show Vault");
-        listBtn.setPreferredSize(new Dimension(120, 30));
         listBtn.addActionListener(e -> showVault());
+
+        JButton resetBtn = new JButton("Reset User");
+        resetBtn.setForeground(Color.RED);
+        resetBtn.addActionListener(e -> resetUser());
 
         buttons.add(addBtn);
         buttons.add(listBtn);
+        buttons.add(resetBtn);
 
         main.add(buttons);
 
         add(main);
         setVisible(true);
     }
-    private void showVault() {
 
-        String[][] data = vault.getCredentialTable();
-        String[] cols = {"Website/App", "Password"};
-
-        JTable table = new JTable(data, cols);
-        table.setRowHeight(25);
-        table.setFont(new Font("Arial", Font.PLAIN, 13));
-
-        JScrollPane scroll = new JScrollPane(table);
-        scroll.setPreferredSize(new Dimension(360, 200));
-
-        JOptionPane.showMessageDialog(
-                this,
-                scroll,
-                "Vault Contents",
-                JOptionPane.PLAIN_MESSAGE
-        );
-    }
+    // ===== ADD CREDENTIAL =====
     private void addCredential() {
         String site = siteField.getText();
         String pass = new String(passField.getPassword());
@@ -94,5 +105,75 @@ public class MainFrame extends JFrame {
 
         siteField.setText("");
         passField.setText("");
+    }
+
+    // ===== SHOW VAULT POPUP =====
+    private void showVault() {
+
+        String[][] data = vault.getCredentialTable();
+        String[] cols = {"Website/App", "Password"};
+
+        table = new JTable(data, cols);
+        table.setRowHeight(24);
+
+        JScrollPane scroll = new JScrollPane(table);
+        scroll.setPreferredSize(new Dimension(380, 200));
+
+        JLabel userInfo = new JLabel("User: " + MasterPassword.getUsername());
+        userInfo.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+
+        JButton deleteBtn = new JButton("Delete Selected");
+
+        deleteBtn.addActionListener(e -> {
+            int row = table.getSelectedRow();
+
+            if (row == -1) {
+                JOptionPane.showMessageDialog(this, "Select a row first");
+                return;
+            }
+
+            String site = table.getValueAt(row, 0).toString();
+            vault.deleteCredential(site);
+
+            JOptionPane.showMessageDialog(this, "Deleted!");
+            showVault(); // reload popup
+        });
+
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.add(userInfo, BorderLayout.NORTH);
+        panel.add(scroll, BorderLayout.CENTER);
+        panel.add(deleteBtn, BorderLayout.SOUTH);
+
+        JOptionPane.showMessageDialog(
+                this,
+                panel,
+                "Vault Contents",
+                JOptionPane.PLAIN_MESSAGE
+        );
+    }
+
+    // ===== RESET USER =====
+    private void resetUser() {
+
+        int confirm = JOptionPane.showConfirmDialog(
+                this,
+                "This will delete ALL saved passwords and reset the master password.\nAre you sure?",
+                "Confirm Reset",
+                JOptionPane.YES_NO_OPTION
+        );
+
+        if (confirm != JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        vault.resetVault();
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Vault cleared. Application will now restart."
+        );
+
+        dispose();
+        new LoginFrame();
     }
 }

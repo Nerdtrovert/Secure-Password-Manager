@@ -9,7 +9,10 @@ public class MasterPassword {
 
     private static String enteredPassword;
     private static final String HASH_FILE = "master.hash";
-
+    private static String username = "User";
+    public static String getUsername() {
+        return username;
+    }
     // Generate salt
     private static String generateSalt() {
         byte[] saltBytes = new byte[16];
@@ -26,7 +29,7 @@ public class MasterPassword {
     }
 
     // Check if first run
-    private static boolean firstRun() {
+    public static boolean isFirstRun() {
         return !(new File(HASH_FILE).exists());
     }
 
@@ -34,60 +37,32 @@ public class MasterPassword {
         return enteredPassword;
     }
 
-    // CLI Login
-    public static boolean login(Scanner sc) {
+    // Create new master password (GUI first run)
+    public static void createNewPassword(String pass, String user) {
         try {
-            String input;
-
-            // FIRST RUN → SET PASSWORD
-            if (firstRun()) {
-                Console console = System.console();
-                if (console != null) {
-                    char[] passChars = console.readPassword("Create master password: ");
-                    input = new String(passChars);
-                } else {
-                    System.out.print("Create master password: ");
-                    input = sc.nextLine();
-                }
-
-                String salt = generateSalt();
-                String hashed = hash(input, salt);
-
-                try (FileWriter fw = new FileWriter(HASH_FILE)) {
-                    fw.write(salt + ":" + hashed);
-                }
-
-                enteredPassword = input;
-                System.out.println("Master password saved.");
-                return true;
-            }
-
-            // NORMAL LOGIN
-            Console console = System.console();
-            if (console != null) {
-                char[] passChars = console.readPassword("Enter master password: ");
-                input = new String(passChars);
-            } else {
-                System.out.print("Enter master password: ");
-                input = sc.nextLine();
-            }
-
-            return verifyGUI(input);
+            String salt = generateSalt();
+            String hashed = hash(pass, salt);
+            username = (user == null || user.isEmpty()) ? "User" : user;
+            FileWriter fw = new FileWriter(HASH_FILE);
+            fw.write(username + "|" + salt + ":" + hashed);
+            fw.close();
 
         } catch (Exception e) {
-            System.out.println("Authentication error.");
-            return false;
+            e.printStackTrace();
         }
     }
 
-    // Used by GUI login AND CLI login
+    // Verify password for GUI or CLI
     public static boolean verifyGUI(String input) {
         try {
             BufferedReader br = new BufferedReader(new FileReader(HASH_FILE));
             String line = br.readLine();
             br.close();
 
-            String[] parts = line.split(":");
+            String[] userSplit = line.split("\\|");
+            username = userSplit[0];
+
+            String[] parts = userSplit[1].split(":");
             String salt = parts[0];
             String storedHash = parts[1];
 
@@ -99,8 +74,20 @@ public class MasterPassword {
             }
 
         } catch (Exception e) {
-            System.out.println("Authentication error. Error: " + e.getMessage());
+            System.out.println("Authentication error: " + e.getMessage());
         }
         return false;
+    }
+
+    // CLI login (optional)
+    public static boolean login(Scanner sc) {
+        try {
+            System.out.print("Enter master password: ");
+            String input = sc.nextLine();
+            return verifyGUI(input);
+        } catch (Exception e) {
+            System.out.println("Authentication error.");
+            return false;
+        }
     }
 }
