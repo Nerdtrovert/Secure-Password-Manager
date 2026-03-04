@@ -1,103 +1,226 @@
 🔐 Secure Password Manager (Java Desktop App)
 
-A desktop password manager designed to address the common problem of insecure credential storage.
-This project combines secure engineering practices with user-focused design decisions to create a simple, privacy-first password management tool.
+
+
+
+
+
+A lightweight offline password manager built in Java demonstrating secure credential storage, encryption workflows, and user-focused product design.
+
+This project was built as part of my learning journey in secure software development and product design, focusing on how real-world applications balance security, usability, and simplicity.
+
+⭐ Highlights
+
+🔒 AES-encrypted credential vault
+
+🔑 Salted SHA-256 master password authentication
+
+🖥️ Desktop GUI built using Java Swing
+
+👁️ Password visibility toggle during credential entry
+
+📋 Copy password to clipboard directly from vault
+
+🗑️ Delete credentials from vault
+
+🧹 Reset vault feature for secure re-initialization
+
+👤 First-run onboarding with optional username
+
+🎬 Quick Demo
+
+Example vault interface:
+
+Users can:
+
+Add credentials
+
+View encrypted vault entries
+
+Copy passwords to clipboard
+
+Delete credentials
+
+Reset the vault securely
 
 🎯 Product Vision
-Many users store passwords in plain text files or notes apps, creating security risks.
-This application aims to provide a lightweight offline alternative that prioritizes:
-privacy (no cloud dependency)
-simplicity of use
-secure local storage
-clear user onboarding
 
-The goal was to build a tool that balances security, usability, and minimal setup friction.
+Many users store passwords in plain text files, spreadsheets, or notes apps, creating significant security risks.
+
+This application aims to provide a simple offline alternative that prioritizes:
+
+🔐 Secure local storage
+
+🖥️ Simple desktop interface
+
+⚡ Minimal setup friction
+
+👤 Clear user ownership
+
+The goal is to balance security, usability, and accessibility while keeping the application lightweight.
 
 🧠 Product Design Decisions
-First-run onboarding flow with optional username to improve personalization
-Encrypted local storage to protect data without requiring internet access
-GUI-based interaction to reduce friction compared to CLI tools
-Visible user session label to reinforce account ownership
-Reset workflow allowing users to safely restart vault setup
-These choices reflect a focus on user trust, clarity, and accessibility.
+
+Key UX and product decisions implemented:
+
+First-run onboarding flow with optional username
+
+Encrypted local storage to protect credentials
+
+GUI-based interaction instead of command line
+
+Visible user session label
+
+Vault reset workflow for safe reinitialization
+
+Password visibility toggle for better usability
+
+Clipboard copy feature for faster password usage
+
+These design choices prioritize clarity, trust, and accessibility.
 
 🚀 Core Features
-
 🔑 Security & Authentication
-Master password login with salted SHA-256 hashing
-AES-encrypted credential storage
-No plain-text password storage
+
+Master password login using salted SHA-256 hashing
+
+AES encrypted vault storage
+
+Passwords never stored in plain text
+
+Fully offline credential management
 
 💻 User Experience
-First-time setup with guided onboarding
-Simple credential entry interface
-Table-based vault viewing for clarity
-In-app delete workflow to manage stored data
-Reset option for full vault re-initialization
+
+Guided first-time onboarding
+
+Optional username personalization
+
+Clean credential entry interface
+
+Show / Hide password toggle
+
+Table-based vault viewer
+
+Copy password to clipboard
+
+Delete credentials
+
+Reset vault option
 
 📂 Storage & Reliability
-Offline file-based persistence
-Encrypted vault contents
-Minimal configuration required
+
+File-based encrypted vault
+
+Persistent local storage
+
+Lightweight architecture
+
+No external dependencies
 
 🛠️ Technology Stack
-Java (object-oriented design)
-Java Swing (desktop UI)
+
+Java (Object-Oriented Programming)
+
+Java Swing for GUI
+
 File I/O for persistence
+
 SHA-256 hashing with salting
-AES encryption using javax.crypto
 
-▶️ Running the Application:
-Download and unzip the repo
+AES encryption (javax.crypto)
+
+Base64 encoding
+
+📁 Project Structure
+PasswordManager/
+│
+├── PasswordManager.java   # Application entry point
+├── LoginFrame.java        # Login and onboarding UI
+├── MainFrame.java         # Main vault manager interface
+├── Vault.java             # Credential storage and file operations
+├── MasterPassword.java    # Authentication and hashing logic
+├── CryptoUtils.java       # AES encryption and decryption
+│
+├── vault.txt              # Encrypted credential storage
+├── master.hash            # Stored master password hash
+│
+├── screenshots/
+│   └── vaultcontents.png  # Example vault UI
+│
+└── README.md
+▶️ Running the Application
+Run the executable JAR
 java -jar PasswordManager.jar
-
-Or run from source:
-
+Run from source
 javac *.java
 java PasswordManager
+🧩 Key Concepts Demonstrated
+
+Secure password hashing with salting
+
+AES encryption and decryption workflows
+
+File-based data persistence
+
+Desktop GUI design with Java Swing
+
+Event-driven programming
+
+Clipboard integration
+
+Modular object-oriented architecture
+
+Basic product design thinking
 
 📈 Product Roadmap (Future Enhancements)
-Near-Term Improvements:
+Near-Term Improvements
+
 Password strength indicator
 
-Search and filtering within vault
+Vault search and filtering
 
-Clipboard copy feature
+Credential editing
 
+Mid-Term Opportunities
 
-Mid-Term Opportunities:
-Dark/light theme options
+Dark / light theme toggle
 
-Database storage for scalability
+Database-backed storage
 
 Backup and restore workflow
 
-Long-Term Vision:
+Long-Term Vision
+
 Multi-user support
 
-Secure sync across devices
+Secure device synchronization
 
-Cross-platform installer packaging
-
+Cross-platform installers
 
 🎯 What This Project Demonstrates
-From an engineering perspective:
-secure storage practices
+Engineering Perspective
 
-encryption workflows
+Secure credential storage
 
-modular architecture
+Encryption workflows
 
-From a product perspective:
-user-centric onboarding design
+Desktop GUI development
 
-feature prioritization thinking
+Modular architecture
 
-iterative UX improvements
+Product Perspective
 
-roadmap planning mindset
+User-centric onboarding design
+
+Feature prioritization thinking
+
+Iterative UX improvements
+
+Product roadmap planning
 
 📜 License
-Educational and portfolio use.
-If you are still reading, thank you🙂
 
+Educational and portfolio use.
+
+If you are still reading — thank you 🙂
